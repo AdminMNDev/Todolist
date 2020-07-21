@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 dotenv.config()
 const app = express()
+
 mongoose.connect(`mongodb+srv://${process.env.USERMGDB}:${process.env.PASSMGDB}@${process.env.SERVERMGDB}/${process.env.BDMGDB}?retryWrites=true&w=majority`, {
         useNewUrlParser: true,
         useUnifiedTopology: true
