@@ -1,7 +1,16 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-
+const projectsRoutes = require('./Routes/projectsRoutes')
+const mongoose = require('mongoose')
+const dotenv = require('dotenv')
+dotenv.config()
 const app = express()
+mongoose.connect(`mongodb+srv://${process.env.USERMGDB}:${process.env.PASSMGDB}@${process.env.SERVERMGDB}/${process.env.BDMGDB}?retryWrites=true&w=majority`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => console.log('Connexion à MongoDB réussie !'))
+    .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -13,16 +22,5 @@ app.use((req, res, next) => {
    next()
 })
 
-app.get('/projects', (req, res) => {
-    const tallProject = [{
-        id: 1,
-        title: 'hi'
-    },
-        {
-            id: 2,
-            title: 'f'
-    }]
-    res.status(200).json({allProject})
-})
-
+app.use('/projects', projectsRoutes)
 module.exports = app
