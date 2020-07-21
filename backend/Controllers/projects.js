@@ -13,6 +13,6 @@ exports.newProject = (req, res) => {
         ...req.body, password: passHash
     })
     project.save()
-        .then(() => res.status(201).json({ message: 'Object crée' }))
+        .then(() => res.status(201).json(project))
         .catch(error => res.status(400).json({error}))
 }
