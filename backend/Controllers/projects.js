@@ -1,18 +1,9 @@
-const querystring = require('querystring')
-const request = require('request')
 const Project = require('../models/project')
 
 exports.projects = (req, res) => {
-    const allProjects = [
-        {
-        id: 1
-    },
-    {
-        id: 2
-        }
-    ]
-    JSON.stringify(allProjects)
-    res.status(200).json(allProjects)
+    Project.find()
+        .then(projects => res.status(200).json(projects))
+        .catch(error => res.status(400).json({error}))
 }
 exports.newProject = (req, res) => {
     delete req.body._id
