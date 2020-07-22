@@ -1,10 +1,16 @@
 const Project = require('../models/project')
 const crypto = require('crypto')
+//const roject = require('../models/project')
 
 exports.projects = (req, res) => {
     Project.find()
         .then(projects => res.status(200).json(projects))
         .catch(error => res.status(400).json({error}))
+}
+exports.findOneProject = (req, res) => {
+    Project.findOne({ _id: req.params.id })
+        .then(project => res.status(200).json(project))
+        .catch(error => res.status(404).json({error}))
 }
 exports.newProject = (req, res) => {
     delete req.body._id
