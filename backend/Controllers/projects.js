@@ -1,6 +1,5 @@
 const Project = require('../models/project')
 const crypto = require('crypto')
-//const roject = require('../models/project')
 
 exports.projects = (req, res) => {
     Project.find()
@@ -20,5 +19,11 @@ exports.newProject = (req, res) => {
     })
     project.save()
         .then(() => res.status(201).json(project))
+        .catch(error => res.status(400).json({error}))
+}
+exports.editProject = (req, res) => {
+    console.log(req.body);
+    Project.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+        .then(project => res.status(200).json({project}))
         .catch(error => res.status(400).json({error}))
 }

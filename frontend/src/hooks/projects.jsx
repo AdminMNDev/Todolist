@@ -9,12 +9,11 @@ function reducer(state, action) {
         case 'SET_PROJECTS':
             return { ...state, projects: action.payload, loading: false }
         case 'DELETE_PROJECTS':
-            return { ...state, projects: state.projects.filter(i => i !== action.payload) }
+            return { ...state, projects: state.projects.filter(p => p !== action.payload) }
         case 'ADD_PROJECTS':
-            console.log(action.payload);
             return { ...state, projects: [...state.projects, action.payload] }
-        case 'UPDATE_PROJECTS':
-            return { ...state, projects: state.projects.map(i => i === action.target ? action.payload : i) }
+        case 'UPDATE_PROJECT':
+            return { ...state, projects: state.projects.map(p => p === action.target ? action.payload : p) }
         case 'FETCHING_PROJECT':
             return {...state, projectId: action.payload._id}
         case 'SET_PROJECT':
@@ -37,7 +36,7 @@ export function useProjects() {
         loading: false,
         projectId: null
     })
-    const project = state.projects ? state.projects.find(r => r._id === state.projectId) : null
+    const project = state.projects ? state.projects.find(p => p._id === state.projectId) : null
     return {
         projects: state.projects,
         project: project,
@@ -63,6 +62,14 @@ export function useProjects() {
         },
         deselectProject: async function () {
             dispatch({type: 'DESELECT_PROJECT'})
+        },
+        updateProject: async function (newTodo, project) {
+            const updateProject = { ...project, todo: [...project.todo, newTodo] }
+            await apiFetch('/projects/id/' + project._id, {
+                method: 'PUT',
+                body: JSON.stringify(updateProject)
+            })
+            dispatch({type: 'UPDATE_PROJECT', payload: updateProject, target: project})
         }
     }
 }

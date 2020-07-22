@@ -12,6 +12,7 @@ function App() {
     fetchProject,
     createProject,
     deselectProject,
+    updateProject,
   } = useProjects()
 
   useEffect(() => {
@@ -19,8 +20,9 @@ function App() {
   }, [fetchProjects])
 
   return <>
-    {!project ? <Projects projects={projects} onCreate={createProject} onClick={fetchProject} /> : <Project project={project} backToHome={deselectProject}/>}
+    {!project ? <Projects projects={projects} onCreate={createProject} onClick={fetchProject} /> : <Project project={project} onUpdate={updateProject} backToHome={deselectProject}/>}
     </>
 }
 
 export default App;
+ 
