@@ -2,7 +2,7 @@ import { useReducer } from "react"
 import { apiFetch } from "../utils/apiFetch"
 
 function reducer(state, action) {
-    console.log('reduce', action.type, action);
+    //console.log('reduce', action.type, action);
     switch (action.type) {
         case 'FETCHING_PROJECTS':
             return {...state, loading: true}
@@ -63,8 +63,13 @@ export function useProjects() {
         deselectProject: async function () {
             dispatch({type: 'DESELECT_PROJECT'})
         },
-        updateProject: async function (newTodo, project) {
-            const updateProject = { ...project, todo: [...project.todo, newTodo] }
+        updateProject: async function (newTodo, project, type) {
+            let updateProject = {}
+            if (type === 'PUT') {
+                updateProject = { ...project, todo: [...project.todo,newTodo] }
+            } else if (type === 'DELETE') {
+                updateProject = { ...project, todo: newTodo }
+            }
             await apiFetch('/projects/id/' + project._id, {
                 method: 'PUT',
                 body: JSON.stringify(updateProject)

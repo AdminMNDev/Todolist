@@ -22,7 +22,7 @@ exports.newProject = (req, res) => {
         .catch(error => res.status(400).json({error}))
 }
 exports.editProject = (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
     Project.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
         .then(project => res.status(200).json({project}))
         .catch(error => res.status(400).json({error}))
