@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 export function Project({ project, backToHome, onUpdate, onDelete }) {
-    console.log(project);
+    //set new todo
     const handleAdd = function (e) {
         e.preventDefault()
         const todo = new FormData(e.target)
@@ -12,6 +12,7 @@ export function Project({ project, backToHome, onUpdate, onDelete }) {
         const updatedProject = { ...project, todo: Object.fromEntries(todo) }
         onUpdate(updatedProject, project, 'PUT')
     }
+    // delete the target
     const handleDelete = function (target) {
         let i = null
         const newTodo = [...project.todo ]
@@ -20,6 +21,7 @@ export function Project({ project, backToHome, onUpdate, onDelete }) {
         const updatedProject = { ...project, todo: newTodo }
         onUpdate(updatedProject,project, 'DELETE')
     }
+    // change state of the target
     const handleUpdateTo = function (target, type) {
         let i = null
         const updatedTodo = [...project.todo]
