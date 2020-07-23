@@ -13,7 +13,6 @@ function ProjectsList({ projects, onClick }) {
 }
 function Project({ project, onClick }) {
     const handleClick = function (project) {
-        console.log(project);
         onClick(project)
     }
     return <button className='btn btn-primary' onClick={() => handleClick(project)}>{project.title}</button>

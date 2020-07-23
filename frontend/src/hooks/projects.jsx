@@ -8,9 +8,9 @@ function reducer(state, action) {
             return {...state, loading: true}
         case 'SET_PROJECTS':
             return { ...state, projects: action.payload, loading: false }
-        case 'DELETE_PROJECTS':
+        case 'DELETE_PROJECT':
             return { ...state, projects: state.projects.filter(p => p !== action.payload) }
-        case 'ADD_PROJECTS':
+        case 'ADD_PROJECT':
             return { ...state, projects: [...state.projects, action.payload] }
         case 'UPDATE_PROJECT':
             return { ...state, projects: state.projects.map(p => p === action.target ? action.payload : p) }
@@ -53,7 +53,7 @@ export function useProjects() {
                 method: 'POST',
                 body: JSON.stringify(data)
             })
-            dispatch({type: 'ADD_PROJECTS', payload: newProject})
+            dispatch({type: 'ADD_PROJECT', payload: newProject})
         },
         fetchProject: async function (project) {
             dispatch({type: 'FETCHING_PROJECT', payload: project})
@@ -78,6 +78,12 @@ export function useProjects() {
                 body: JSON.stringify(update)
             })
             dispatch({ type: 'UPDATE_PROJECT', payload: update, target: target})
+        },
+        deleteProject: async function (target) {
+            await apiFetch('/projects/id/' + target._id, {
+                method: 'DELETE'
+            })
+            dispatch({type: 'DELETE_PROJECT', payload: target})
         }
     }
 }

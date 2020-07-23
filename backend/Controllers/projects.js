@@ -27,3 +27,8 @@ exports.editProject = (req, res) => {
         .then(project => res.status(200).json({project}))
         .catch(error => res.status(400).json({error}))
 }
+exports.deleteProject = (req, res) => {
+    Project.deleteOne({ _id: req.params.id })
+        .then(() => res.status(200).json({ message: 'Projets supprimer' }))
+        .catch(error => res.status(400).json({error}))
+}

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-export function Project({ project, backToHome, onUpdate }) {
+export function Project({ project, backToHome, onUpdate, onDelete }) {
     console.log(project);
     const handleAdd = function (e) {
         e.preventDefault()
@@ -57,6 +57,7 @@ export function Project({ project, backToHome, onUpdate }) {
                     </ul>
                 }
             </div>)}
+            <button onClick={() => onDelete(project)}>delete</button>
         </div>
     )
 }
@@ -65,4 +66,5 @@ Project.propTypes = {
     project: PropTypes.object.isRequired,
     backToHome: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired
 }
