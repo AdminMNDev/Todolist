@@ -2,22 +2,37 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 export function Project({ project, backToHome, onUpdate }) {
-    project.todo.map(t => t === null ? console.log(true): console.log(false))
-
+    console.log(project);
     const handleAdd = function (e) {
         e.preventDefault()
         const todo = new FormData(e.target)
         todo.append('finished', false)
         todo.append('started', false)
         todo.append('_id', new Date().getTime())
-        onUpdate(Object.fromEntries(todo), project, 'PUT')
+        const updatedProject = { ...project, todo: Object.fromEntries(todo) }
+        onUpdate(updatedProject, project, 'PUT')
     }
     const handleDelete = function (target) {
         let i = null
         const newTodo = [...project.todo ]
         project.todo.map(t => t._id === target._id ? i = project.todo.indexOf(t) : t)
         newTodo.splice(i, 1)
-        onUpdate(newTodo,project, 'DELETE')
+        const updatedProject = { ...project, todo: newTodo }
+        onUpdate(updatedProject,project, 'DELETE')
+    }
+    const handleUpdateTo = function (target, type) {
+        let i = null
+        const updatedTodo = [...project.todo]
+        project.todo.map(t => t._id === target._id ? i = project.todo.indexOf(t) : t)
+        if (type === 'STARTED') {
+            updatedTodo[i].started = true
+            const updatedProject = { ...project, todo: updatedTodo }
+            onUpdate(updatedProject, project, 'UPDATE')
+        } else if (type === 'FINISHED') {
+            updatedTodo[i].finished = true
+            const updatedProject = { ...project, todo: updatedTodo }
+            onUpdate(updatedProject, project, 'UPDATE')
+            }
     }
     return (
         <div>
@@ -31,11 +46,16 @@ export function Project({ project, backToHome, onUpdate }) {
             
             {project.todo.map(t => <div key={t._id}>
                 <p>{t.todo}</p>
-                <ul>
-                    <li>Commencer: {t.started}</li>
-                    <li>Terminer: {t.finished}</li>
-                    <button className='alert alert-danger' onClick={() => handleDelete(t)}>Supprimer</button>
-                </ul>
+                {t.finished === 'false' && 
+                    <ul>
+                        <li>Commencer: {t.started === true ? 'Oui' : 'Non'}</li>
+                        <button className='alert alert-danger' onClick={() => handleDelete(t)}>Supprimer</button>
+                        {t.started === true ?
+                            <button className='alert alert-success' onClick={() => handleUpdateTo(t, 'FINISHED')}>Terminer</button>
+                            :<button className='alert alert-secondary' onClick={() => handleUpdateTo(t, 'STARTED')}>Commencer</button>
+                        }
+                    </ul>
+                }
             </div>)}
         </div>
     )

@@ -63,18 +63,21 @@ export function useProjects() {
         deselectProject: async function () {
             dispatch({type: 'DESELECT_PROJECT'})
         },
-        updateProject: async function (newTodo, project, type) {
-            let updateProject = {}
+        updateProject: async function (updatedProject, target, type) {
+            let update = {}
             if (type === 'PUT') {
-                updateProject = { ...project, todo: [...project.todo,newTodo] }
+                update = {...target, todo: [...target.todo, updatedProject.todo]}
             } else if (type === 'DELETE') {
-                updateProject = { ...project, todo: newTodo }
+                update = { ...target, todo: updatedProject.todo }
+                console.log(update);
+            } else if (type === 'UPDATE') {
+                update = { ...target, todo: updatedProject.todo }
             }
             await apiFetch('/projects/id/' + project._id, {
                 method: 'PUT',
-                body: JSON.stringify(updateProject)
+                body: JSON.stringify(update)
             })
-            dispatch({type: 'UPDATE_PROJECT', payload: updateProject, target: project})
+            dispatch({ type: 'UPDATE_PROJECT', payload: update, target: target})
         }
     }
 }
