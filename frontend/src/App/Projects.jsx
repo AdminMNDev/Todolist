@@ -6,33 +6,40 @@ import { Button } from '../UI/Button';
 import { Unlock } from '../UI/Unlock';
 import { Field } from '../UI/Field';
 
-
 export function Projects({ projects, onCreate, onClick }) {
     return <div className='container'>
         <CreateProjectForm onSubmit={onCreate} />
         {projects === null ? <Loader /> : <ProjectsList onClick={onClick} projects={projects} />}
-        
     </div>
 }
 // All our projects
 function ProjectsList({ projects, onClick }) {
     const [error, setError] = useState(null)
+
     return <div className='card mt-4'>
         <div className="card-header">
             La liste des projets
         </div>
         <div className="card-body">
                 {error && <p className='alert alert-danger'>{error}</p>}
-                {projects.map(project => <Project key={project._id} project={project} onClick={onClick} setError={setError} />)}
+            {projects.map(project => <Project key={project._id} project={project} onClick={onClick} setError={setError}/>)}
         </div>
     </div>
 }
 
 function Project({ project, onClick, setError }) {
-    const [login, setLogin] = useState(null)
+    const [login, setLogin] = useState(false)
     const handleClick = function () {
-        setLogin(true)        
+        setLogin(!login)
     }
+   
+    return <>
+        <Button type='secondary ml-1 mr-1' onClick={handleClick}>{project.title}</Button>
+        {login && <VerifPassword onClick={onClick} setError={setError} project={project} login={login} setLogin={setLogin}/>}
+    </>
+}
+
+function VerifPassword({ onClick, setError, project}) {
     // If password is not the same, we show an error
     const handlePassword = async function (e) {
         e.preventDefault()
@@ -42,14 +49,10 @@ function Project({ project, onClick, setError }) {
             setError(error)
         }
     }
-    return <>
-        <Button type='secondary ml-1 mr-1' onClick={() => handleClick(project)}>{project.title}</Button>
-        {login &&
-            <form onSubmit={handlePassword} className='mt-2 mb-2'>
+    return  <form onSubmit={handlePassword} className='mt-2 mb-2'>
                 <Field type='password' name='password'>Mot de passe</Field>
                 <Button htmlType='submit' type='secondary'><Unlock /></Button>
-            </form>}
-        </>
+            </form>
 }
 
 function CreateProjectForm({ onSubmit }) {
@@ -75,7 +78,6 @@ function CreateProjectForm({ onSubmit }) {
                 </div>
                 
         </div>
-       
 }
 
 Projects.propTypes = {
