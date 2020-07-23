@@ -1,5 +1,5 @@
 import { useReducer } from "react"
-import { apiFetch } from "../utils/apiFetch"
+import { apiFetch, ApiError } from "../utils/apiFetch"
 
 function reducer(state, action) {
     //console.log('reduce', action.type, action);
@@ -55,10 +55,19 @@ export function useProjects() {
             })
             dispatch({type: 'ADD_PROJECT', payload: newProject})
         },
-        fetchProject: async function (project) {
-            dispatch({type: 'FETCHING_PROJECT', payload: project})
-            const oneProject = await apiFetch('/projects/id/' + project._id)
-            dispatch({ type: 'SET_PROJECT', payload: oneProject })
+        fetchProject: async function (project, password) {
+            console.log(password);
+            
+            try {
+                const oneProject = await apiFetch('/projects/id/' + project._id + '/pass/' + password)
+                dispatch({ type: 'FETCHING_PROJECT', payload: project })
+                dispatch({ type: 'SET_PROJECT', payload: oneProject })
+            } catch (e) {
+                if (e instanceof ApiError) {
+                    //console.log(e.error);
+                    return e.error
+                }
+            }
         },
         deselectProject: async function () {
             dispatch({type: 'DESELECT_PROJECT'})

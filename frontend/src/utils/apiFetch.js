@@ -21,7 +21,6 @@ export async function apiFetch(endpoint, options) {
     if (response.ok) {
         return responseData
     } else {
-        console.log(responseData);
         throw new ApiError(responseData)
     }
 }

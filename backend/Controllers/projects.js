@@ -7,8 +7,18 @@ exports.projects = (req, res) => {
         .catch(error => res.status(400).json({error}))
 }
 exports.findOneProject = (req, res) => {
+    console.log(req.params.pass);
+    const password = crypto.createHash('md5').update(req.params.pass).digest('hex');
     Project.findOne({ _id: req.params.id })
-        .then(project => res.status(200).json(project))
+        .then(project => {
+            if (project.password === password) {
+                res.status(200).json({project})
+            } else {
+                res.status(404).json({
+                    message: 'Mauvais mot de passe'
+                })
+            }
+        })
         .catch(error => res.status(404).json({error}))
 }
 exports.newProject = (req, res) => {
