@@ -1,5 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Button } from '../UI/Button'
+import { Trash } from '../UI/Trash'
+import { Return } from '../UI/Return'
+import { Checked } from '../UI/Checked'
+import { Start } from '../UI/Start'
+import { Add } from '../UI/Add'
+import { Field } from '../UI/Field'
 
 export function Project({ project, backToHome, onUpdate, onDelete }) {
     //set new todo
@@ -37,29 +44,37 @@ export function Project({ project, backToHome, onUpdate, onDelete }) {
             }
     }
     return (
-        <div>
-            <button className='btn btn-danger' onClick={backToHome}>Retour</button>
-            <h1>{project.title}</h1>
-            <form onSubmit={handleAdd}>
-                <label>Ajouter une nouvelle tache</label>
-                <input type='text' name="todo"/>
-                <button type='submit'>GO</button>
-            </form>
-            
-            {project.todo.map(t => <div key={t._id}>
-                <p>{t.todo}</p>
-                {t.finished === 'false' && 
-                    <ul>
+        <div className='card'>
+            <div className='card-header'>
+                <Button type='danger' onClick={backToHome}><Return /></Button>
+                <h1>{project.title}</h1>
+                
+            </div>
+            <div className='card-body'>
+                <form onSubmit={handleAdd}>
+                    <Field type='text' name='todo'>Ajouter une nouvelle tache</Field>
+                    <Button htmlType='submit'><Add/></Button>
+                </form>
+            </div>
+            <div className="card-footer">
+                    {project.todo.map(t => <div key={t._id}>
+                    <p>{t.todo}</p>
+                    {t.finished === 'false' && 
+                        <ul>
                         <li>Commencer: {t.started === true ? 'Oui' : 'Non'}</li>
-                        <button className='alert alert-danger' onClick={() => handleDelete(t)}>Supprimer</button>
+                        <Button type='danger' onClick={() => handleDelete(t)}><Trash/></Button>
                         {t.started === true ?
-                            <button className='alert alert-success' onClick={() => handleUpdateTo(t, 'FINISHED')}>Terminer</button>
-                            :<button className='alert alert-secondary' onClick={() => handleUpdateTo(t, 'STARTED')}>Commencer</button>
-                        }
-                    </ul>
-                }
-            </div>)}
-            <button onClick={() => onDelete(project)}>delete</button>
+                            <Button type='success' onClick={() => handleUpdateTo(t, 'FINISHED')}><Checked/></Button>
+                            :
+                            <Button type='secondary' onClick={() => handleUpdateTo(t, 'STARTED')}><Start/></Button>
+                            }
+                        </ul>
+                    }
+                </div>)}
+            </div>
+            
+            
+            <Button type='danger' onClick={() => onDelete(project)}><Trash/></Button>
         </div>
     )
 }
