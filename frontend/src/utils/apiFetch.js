@@ -5,9 +5,7 @@ export class ApiError{
 }
 
 export async function apiFetch(endpoint, options) {
-    console.log(options)
     const response = await fetch('http://192.168.0.13:1234' + endpoint, {
-        //credentials: 'include',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'

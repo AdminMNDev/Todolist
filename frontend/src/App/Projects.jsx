@@ -8,8 +8,14 @@ import { Field } from '../UI/Field';
 
 export function Projects({ projects, onCreate, onClick }) {
     return <div className='container'>
-        <CreateProjectForm onSubmit={onCreate} />
-        {projects === null ? <Loader /> : <ProjectsList onClick={onClick} projects={projects} />}
+        {projects === null ? <Loader /> :
+            <>
+                <CreateProjectForm onSubmit={onCreate} />
+                <ProjectsList onClick={onClick} projects={projects} />
+            </>}
+        {/* <div>
+            <img src='../../img/cact.jpg'></img>
+        </div> */}
     </div>
 }
 // All our projects
@@ -34,7 +40,7 @@ function Project({ project, onClick, setError }) {
     }
    
     return <>
-        <Button type='secondary ml-1 mr-1' onClick={handleClick}>{project.title}</Button>
+        <Button type='secondary ml-1 mr-1 mb-2' onClick={handleClick}>{project.title}</Button>
         {login && <VerifPassword onClick={onClick} setError={setError} project={project} login={login} setLogin={setLogin}/>}
     </>
 }
@@ -50,19 +56,33 @@ function VerifPassword({ onClick, setError, project}) {
         }
     }
     return  <form onSubmit={handlePassword} className='mt-2 mb-2'>
-                <Field type='password' name='password'>Mot de passe</Field>
+                <Field type='password' name='password' focus={true} autoComplete='current-password'>Mot de passe</Field>
                 <Button htmlType='submit' type='secondary'><Unlock /></Button>
             </form>
 }
 
 function CreateProjectForm({ onSubmit }) {
+    const [title, setTitle] = useState('')
+    const [pass, setPass] = useState('')
+
     const handleSubmit = async function (e) {
         e.preventDefault()
         try {            
             await onSubmit(Object.fromEntries(new FormData(e.target)))
+            setTitle('')
+            setPass('')
             
         } catch (e) {
             console.log(e);
+        }
+    }
+
+    const handleChange = function (e) {
+        if (e.target.name === 'title') {
+            setTitle(e.target.value)
+        }
+        if (e.target.name === 'password') {
+            setPass(e.target.value)
         }
     }
     return  <div className='card mt-4'>
@@ -71,8 +91,8 @@ function CreateProjectForm({ onSubmit }) {
                 </div>
                 <div className='card-body'>
                     <form onSubmit={handleSubmit}>
-                        <Field type='text' name='title'>Nom du projet</Field>
-                        <Field type='password' name='password'>Mot de passe</Field>
+                        <Field type='text' name='title' value={title} onChange={handleChange} autoComplete='username'>Nom du projet</Field>
+                        <Field type='password' name='password' value={pass} onChange={handleChange} autoComplete='new-password'>Mot de passe</Field>
                         <Button htmlType='submit'>Nouveau projet</Button>
                     </form>
                 </div>
